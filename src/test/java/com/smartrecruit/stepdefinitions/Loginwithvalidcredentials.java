@@ -16,7 +16,7 @@ public void the_user_is_on_the_login_page() {
 driver = DriverFactory.getDriver();
 loginPage.navigateToLoginPage();
 }
-@When("I enter {string}")
+// DUPLICATE: @When("I enter {string}")
 public void i_enter_email(String email) {
 loginPage.enterEmail(email);
 }
