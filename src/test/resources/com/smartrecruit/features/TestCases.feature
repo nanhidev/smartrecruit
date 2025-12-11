@@ -240,3 +240,111 @@ Scenario Outline: Verify login with special characters in email and password
   Examples:
     | email                     | password     |
     | user+test@example.com    | P@ssw0rd!    |
+
+@valid-login
+Scenario Outline: Verify successful login with valid credentials
+  When I enter "<email>"
+  And I enter "<password>"
+  And I click the 'Login' button
+  And I check the 'Show/Hide Password' option
+  Then the user should be redirected to the dashboard URL
+  And the dashboard should display the recruiter's name
+
+  Examples:
+    | email               | password           |
+    | krishna@gmail.com   | ValidPassword123   |
+
+  @feature_password_visibility
+  @toggle-password-visibility
+  Scenario Outline: Verify Show/Hide Password functionality
+    Given the user enters "<password>" in the Password field
+    When the user clicks the 'Show/Hide Password' option
+    Then the password should be visible
+    When the user clicks the 'Show/Hide Password' option again
+    Then the password should be hidden
+
+    Examples:
+      | password         |
+      | ValidPassword123 |
+
+@incorrect-email
+Scenario Outline: Verify error message for incorrect email ID
+  Given the user is on the Login Screen
+  When I enter "<email_id>" in the Email ID field
+  And I enter "<password>" in the Password field
+  And I click the 'Login' button
+  Then an error message 'Incorrect email ID or password.' is displayed
+
+  Examples:
+    | email_id | password            |
+    | abc@     | ValidPassword123    |
+
+  @incorrect-password
+  Scenario Outline: Verify error message for incorrect password
+    Given the user enters a valid email ID "<email>"
+    And the user enters an incorrect password "<password>"
+    And the user clicks the 'Login' button
+    Then an error message "Incorrect email ID or password." is displayed
+
+    Examples:
+      | email               | password          |
+      | krishna@gmail.com   | wrongpassword123   |
+
+@empty-fields-error
+Scenario Outline: Verify error message for empty fields
+  When I leave the Email ID field empty
+  And I leave the Password field empty
+  And I click the 'Login' button
+  Then an error message 'Incorrect email ID or password.' is displayed
+
+  Examples:
+    | Email ID | Password |
+    |          |          |
+
+@sql-injection-error
+Scenario Outline: Verify error message for SQL injection in email field
+  When I enter "<email>"
+  And I enter "<password>"
+  And I click the 'Login' button
+  Then the user should see an error message 'Incorrect email ID or password.'
+
+  Examples:
+    | email                     | password     |
+    | 'admin' OR '1'='1'      | anyPassword  |
+
+@valid_login_button_disabled
+Scenario Outline: Verify Login button is disabled when fields are empty
+  Given the Email ID field is "<email>"
+  And I enter "<password>" in the Password field
+  Then the 'Login' button should be disabled
+  Given the Password field is cleared
+  And I enter "<email>" in the Email ID field
+  Then the 'Login' button should still be disabled
+
+  Examples:
+    | email                     | password       |
+    |                          | valid_password |
+    | valid_email@example.com   |                |
+```gherkin
+@verify_login_max_length
+Scenario Outline: Verify login with maximum length email and password
+  Given the user is on the Login Screen
+  When I enter an email ID at the maximum allowed length "<email>"
+  And I enter a password at the maximum allowed length "<password>"
+  And I click the 'Login' button
+  Then the user should be redirected to the dashboard
+
+  Examples:
+    | email
+
+@valid-special-character-login
+Scenario Outline: Verify login with special characters in email and password
+  Given the user is on the Login Screen
+  When I enter "<email>"
+  And I enter "<password>"
+  And the user clicks the Login button
+  Then the user should be redirected to the dashboard
+
+  Examples:
+    | email                     | password    |
+    | user+test@example.com     | P@ssw0rd!   |
