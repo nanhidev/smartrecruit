@@ -348,3 +348,108 @@ Scenario Outline: Verify login with special characters in email and password
   Examples:
     | email                     | password    |
     | user+test@example.com     | P@ssw0rd!   |
+
+@valid-login
+Scenario Outline: Verify successful login with valid credentials
+  When I enter "<email>"
+  And I enter "<password>"
+  And I click the 'Login' button
+  Then the 'Show/Hide Password' option is available
+  And I should be redirected to the dashboard URL
+  And the dashboard displays the recruiter's name
+
+  Examples:
+    | email                  | password          |
+    | krishna@gmail.com      | ValidPassword123   |
+
+  @feature_verify_show_hide_password
+  @verify_show_hide_password
+  Scenario Outline: Verify Show/Hide Password functionality
+    Given the user is on the Login Screen
+    When I enter "<password>" in the Password field
+    And I click the 'Show/Hide Password' option
+    Then the password should be visible
+    And I click the 'Show/Hide Password' option again
+    Then the password should be hidden
+
+    Examples:
+      | password          |
+      | ValidPassword123  |
+
+@incorrect-email
+Scenario Outline: Verify error message for incorrect email ID
+  Given the user enters an incorrect email ID "<emailID>"
+  And the user enters a valid password "<password>"
+  When the user clicks the 'Login' button
+  Then the user should see the error message 'Incorrect email ID or password.'
+
+  Examples:
+    | emailID | password            |
+    | abc@    | ValidPassword123    |
+
+@incorrect-password-error
+Scenario Outline: Verify error message for incorrect password
+  Given the user enters a valid email ID "<email>"
+  And the user enters an incorrect password "<password>"
+  And the user clicks the 'Login' button
+  Then an error message 'Incorrect email ID or password.' is displayed
+
+  Examples:
+    | email               | password           |
+    | krishna@gmail.com   | wrongpassword123   |
+
+@empty_fields_error_message
+Scenario Outline: Verify error message for empty fields
+  When the user leaves the Email ID field empty
+  And the user leaves the Password field empty
+  And the user clicks the 'Login' button
+  Then an error message 'Incorrect email ID or password.' is displayed
+
+  Examples:
+    | Email ID | Password |
+    |          |          |
+
+  @verify_sql_injection_error
+  Scenario Outline: Verify error message for SQL injection in email field
+    Given the user enters the SQL injection string "<email>"
+    And the user enters the password "<password>"
+    And the user clicks the Login button
+    Then the user should see the error message 'Incorrect email ID or password.'
+
+    Examples:
+      | email                     | password      |
+      | "'admin' OR '1'='1'"     | anyPassword   |
+
+@disabled_login_button
+Scenario Outline: Verify Login button is disabled when fields are empty
+  When the user leaves the Email ID field empty
+  And the user enters "<password>" in the Password field
+  Then the 'Login' button should be disabled
+  When the user clears the Password field
+  And the user enters "<email>" in the Email ID field
+  Then the 'Login' button should still be disabled
+
+  Examples:
+    | password          | email                     |
+    | valid_password    | valid_email@example.com   |
+```gherkin
+@maximum_length_login
+Scenario Outline: Verify login with maximum length email and password
+  Given I enter an email ID at the maximum allowed length in the Email ID field
+  And I enter a password at the maximum allowed length in the Password field
+  When the user clicks the 'Login' button
+  Then the user should be redirected to the dashboard
+
+  Examples:
+    | email
+
+@special_character_login
+Scenario Outline: Verify login with special characters in email and password
+  Given the user enters an email ID with special characters "<email>"
+  And the user enters a password with special characters "<password>"
+  When the user clicks the Login button
+  Then the user should be redirected to the dashboard
+
+  Examples:
+    | email                    | password      |
+    | user+test@example.com   | P@ssw0rd!     |
