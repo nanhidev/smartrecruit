@@ -1,6 +1,5 @@
 package com.backend.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,26 +13,54 @@ public class LoginScreenforRecruitersPage {
 
     @FindBy(id = "emailField")
     private WebElement emailField;
+
     @FindBy(id = "passwordField")
     private WebElement passwordField;
+
     @FindBy(id = "loginButton")
     private WebElement loginButton;
+
     @FindBy(id = "rememberMeCheckbox")
     private WebElement rememberMeCheckbox;
+
     @FindBy(id = "showPasswordOption")
     private WebElement showPasswordOption;
+
     @FindBy(id = "hidePasswordOption")
     private WebElement hidePasswordOption;
+
     @FindBy(id = "dashboard")
     private WebElement dashboard;
+
     @FindBy(id = "errorMessage")
     private WebElement errorMessage;
+
     @FindBy(id = "forgotPasswordLink")
     private WebElement forgotPasswordLink;
+
     @FindBy(id = "successMessage")
     private WebElement successMessage;
-    @FindBy(id = "preFilledEmailField")
-    private WebElement preFilledEmailField;
+
+    @FindBy(id = "passwordResetScreen")
+    private WebElement passwordResetScreen;
+
+    @FindBy(id = "invalidLinkError")
+    private WebElement invalidLinkError;
+
+    @FindBy(id = "errorMessageDisplayed")
+    private WebElement errorMessageDisplayed;
+
+    @FindBy(id = "sendResetLink")
+    private WebElement sendResetLinkButton;
+
+    @FindBy(id = "accountLockedMessage")
+    private WebElement lockedMessageElement;
+
+    @FindBy(id = "resetLink")
+    private WebElement resetLinkInput;
+
+    @FindBy(id = "submitResetLink")
+    private WebElement submitResetLinkButton;
 
     public LoginScreenforRecruitersPage(WebDriver driver) {
         this.driver = driver;
@@ -41,9 +68,9 @@ public class LoginScreenforRecruitersPage {
         PageFactory.initElements(driver, this);
     }
 
-    public void enterEmail(String emailID) {
+    public void enterEmail(String email) {
         try {
-            elementUtils.clearAndSendKeys(emailField, emailID);
+            elementUtils.clearAndSendKeys(emailField, email);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,6 +110,41 @@ public class LoginScreenforRecruitersPage {
         }
     }
 
+    public void checkRememberMe() {
+        try {
+            elementUtils.clickElement(rememberMeCheckbox);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getErrorMessage() {
+        try {
+            return elementUtils.getElementText(errorMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public String getEmailFieldValue() {
+        try {
+            return emailField.getAttribute("value");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public boolean isEmailFieldEmpty() {
+        try {
+            return emailField.getText().isEmpty();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void clickShowPassword() {
         try {
             elementUtils.clickElement(showPasswordOption);
@@ -100,38 +162,52 @@ public class LoginScreenforRecruitersPage {
     }
 
     public boolean isPasswordVisible() {
-        return !passwordField.getAttribute("type").equals("password");
-    }
-
-    public String getErrorMessage() {
         try {
-            return elementUtils.getElementText(errorMessage);
+            return passwordField.getAttribute("type").equals("text");
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 
-    public void checkRememberMe() {
+    public void clickForgotPassword() {
         try {
-            elementUtils.clickElement(rememberMeCheckbox);
+            elementUtils.clickElement(forgotPasswordLink);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getEmailFieldValue() {
+    public boolean isPasswordResetScreenDisplayed() {
         try {
-            return emailField.getAttribute("value");
+            return elementUtils.isElementDisplayed(passwordResetScreen);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 
-    public boolean isEmailFieldEmpty() {
+    public boolean isSuccessMessageDisplayed() {
         try {
-            return emailField.getAttribute("value").isEmpty();
+            return elementUtils.isElementDisplayed(successMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isInvalidLinkErrorDisplayed() {
+        try {
+            return elementUtils.isElementDisplayed(invalidLinkError);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isErrorMessageDisplayed() {
+        try {
+            return elementUtils.isElementDisplayed(errorMessageDisplayed);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -154,71 +230,23 @@ public class LoginScreenforRecruitersPage {
         }
     }
 
-    public void clickForgotPassword() {
-        try {
-            elementUtils.clickElement(forgotPasswordLink);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean isPasswordResetScreenDisplayed() {
-        // Implement logic to check if password reset screen is displayed
-        return false; // Placeholder
-    }
-
-    public boolean isSuccessMessageDisplayed() {
-        try {
-            return elementUtils.isElementDisplayed(successMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean isInvalidLinkErrorDisplayed() {
-        // Implement logic to check if invalid link error is displayed
-        return false; // Placeholder
-    }
-
-    public boolean isErrorMessageDisplayed() {
-        // Implement logic to check if error message is displayed
-        return false; // Placeholder
-    }
-
-    public void useInvalidResetLink() {
-        try {
-            WebElement resetLinkInput = driver.findElement(By.id("resetLinkInput"));
-            elementUtils.clearAndSendKeys(resetLinkInput, "invalid_reset_link");
-            WebElement sendResetLinkButton = driver.findElement(By.id("sendResetLinkButton"));
-            elementUtils.clickElement(sendResetLinkButton);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void simulateSlowNetwork() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Implement slow network simulation if applicable
     }
 
     public boolean isOnLoginScreen() {
         try {
-            WebElement loginScreenHeader = driver.findElement(By.xpath("//h1[text()='Login']"));
-            return elementUtils.isElementDisplayed(loginScreenHeader);
+            return driver.getTitle().contains("Login") || elementUtils.isElementDisplayed(emailField);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public void accessDashboard() {
+    public void waitForLoginProcessing() {
         try {
-            WebElement dashboardLink = driver.findElement(By.id("dashboardLink"));
-            elementUtils.clickElement(dashboardLink);
+            Thread.sleep(5000); // Wait for the processing to complete
+            Assert.assertTrue("Dashboard is not displayed after login processing.", isDashboardDisplayed());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -226,8 +254,26 @@ public class LoginScreenforRecruitersPage {
 
     public void clickSendResetLink() {
         try {
-            WebElement sendResetLinkButton = driver.findElement(By.id("sendResetLinkButton"));
             elementUtils.clickElement(sendResetLinkButton);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void isAccountLocked() {
+        try {
+            String actualMessage = elementUtils.getElementText(lockedMessageElement);
+            String expectedMessage = "Your account is locked."; // Replace with actual expected message
+            Assert.assertEquals(actualMessage, expectedMessage, "Account lock message does not match!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void useInvalidResetLink() {
+        try {
+            elementUtils.clearAndSendKeys(resetLinkInput, "invalidResetLink"); // Replace with actual invalid link
+            elementUtils.clickElement(submitResetLinkButton);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -235,54 +281,25 @@ public class LoginScreenforRecruitersPage {
 
     public void navigateToLoginScreen() {
         try {
-            driver.navigate().to("localhost/login");
+            driver.get("http://localhost/login"); // Replace with actual login URL
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public boolean isAccountLocked() {
-        try {
-            WebElement accountLockedMessage = driver.findElement(By.xpath("//div[text()='Your account is locked.']"));
-            return elementUtils.isElementDisplayed(accountLockedMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean isDashboardDisplayedAfterDelay(long delay) {
-        try {
-            Thread.sleep(delay);
-            return elementUtils.isElementDisplayed(dashboard);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
     public void useSameResetLinkAgain() {
         try {
-            WebElement resetLinkInput = driver.findElement(By.id("resetLinkInput"));
-            elementUtils.clearAndSendKeys(resetLinkInput, "same_reset_link");
-            WebElement sendResetLinkButton = driver.findElement(By.id("sendResetLinkButton"));
-            elementUtils.clickElement(sendResetLinkButton);
+            elementUtils.clearAndSendKeys(resetLinkInput, "sameResetLink"); // Replace with actual reset link
+            elementUtils.clickElement(submitResetLinkButton);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void waitForLoginProcessing() {
+    public void accessDashboard() {
         try {
-            long startTime = System.currentTimeMillis();
-            while (System.currentTimeMillis() - startTime < 10000) { // 10 seconds timeout
-                WebElement loginProcessingIndicator = driver.findElement(By.id("loginProcessingIndicator"));
-                if (!elementUtils.isElementDisplayed(loginProcessingIndicator)) {
-                    break;
-                }
-                Thread.sleep(500);
-            }
-        } catch (InterruptedException e) {
+            Assert.assertTrue("Unable to access the dashboard.", isDashboardDisplayed());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

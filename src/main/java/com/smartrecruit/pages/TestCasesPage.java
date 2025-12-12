@@ -11,23 +11,26 @@ public class TestCasesPage {
     private WebDriver driver;
     private ElementUtils elementUtils;
 
-    @FindBy(id = "emailField") // Unique locator for email field
+    @FindBy(id = "emailField")
     private WebElement emailField;
 
-    @FindBy(id = "passwordField") // Unique locator for password field
+    @FindBy(id = "passwordField")
     private WebElement passwordField;
 
-    @FindBy(id = "loginButton") // Unique locator for login button
+    @FindBy(id = "loginButton")
     private WebElement loginButton;
 
-    @FindBy(id = "showHidePassword") // Unique locator for show/hide password option
+    @FindBy(id = "showHidePasswordOption")
     private WebElement showHidePasswordOption;
 
-    @FindBy(id = "recruiterName") // Unique locator for recruiter name display
+    @FindBy(id = "recruiterName")
     private WebElement recruiterName;
 
-    @FindBy(id = "errorMessage") // Unique locator for error message display
+    @FindBy(id = "errorMessage")
     private WebElement errorMessage;
+
+    @FindBy(id = "dashboardURL")
+    private WebElement dashboardURL;
 
     public TestCasesPage(WebDriver driver) {
         this.driver = driver;
@@ -36,7 +39,7 @@ public class TestCasesPage {
     }
 
     public void navigateToLoginPage() {
-        driver.get("http://localhost/login"); // Navigate to the login page
+        driver.get("http://localhost/login"); // Update URL as needed
     }
 
     public void enterEmail(String email) {
@@ -85,12 +88,21 @@ public class TestCasesPage {
         }
     }
 
+    public boolean isPasswordVisible() {
+        try {
+            return passwordField.getAttribute("type").equals("text");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public String getErrorMessage() {
         try {
             return elementUtils.getElementText(errorMessage);
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            return null;
         }
     }
 
@@ -119,27 +131,17 @@ public class TestCasesPage {
         }
     }
 
-    public void setEmailField(String email) {
+    public void setEmailField(String emailFieldValue) {
         try {
-            elementUtils.clearAndSendKeys(emailField, email);
+            elementUtils.clearAndSendKeys(emailField, emailFieldValue);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setPasswordField(String password) {
+    public void setPasswordField(String passwordFieldValue) {
         try {
-            elementUtils.clearAndSendKeys(passwordField, password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void isPasswordVisible() {
-        try {
-            WebElement passwordField = driver.findElement(By.xpath("//input[@type='password']"));
-            boolean isVisible = elementUtils.isElementDisplayed(passwordField);
-            Assert.assertTrue(isVisible, "Password field is not visible!");
+            elementUtils.clearAndSendKeys(passwordField, passwordFieldValue);
         } catch (Exception e) {
             e.printStackTrace();
         }
