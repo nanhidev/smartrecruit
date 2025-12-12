@@ -141,7 +141,7 @@ testCasesPage.isPasswordHidden();
 public void theUserEntersAnIncorrectPassword(String incorrectPassword) {
 testCasesPage.enterPassword(incorrectPassword);
 }
-@When("the user enters a valid password {string}")
+// DUPLICATE: @When("the user enters a valid password {string}")
 public void theUserEntersAValidPassword(String validPassword) {
 testCasesPage.enterPassword(validPassword);
 }
